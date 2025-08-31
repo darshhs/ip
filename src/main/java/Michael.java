@@ -1,36 +1,60 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Michael {
+    static ArrayList<Task> tasks = new ArrayList<>();
+
     public static void main(String[] args) {
 
         String welcome = "Hello! I'm Michael\n" +
-                         "What can I do for you?";
+                "What can I do for you?";
 
         System.out.println(welcome);
 
         Scanner in = new Scanner(System.in);
         String line = "";
 
-        String[] results = new String [100];
-        int currentData = 0;
-
-        String ending_line =  "bye";
+        String ending_line = "bye";
         String exit = "Bye. Hope to see you again soon!";
+
 
         while (!(line.equals(ending_line))) {
             line = in.nextLine();
-            if (line.equals("list")) {
-                int index = 1;
-                for(int i = 0; i < currentData; i++) {
-                    System.out.println(index + ". " + results[i]);
-                    index += 1;
+            String[] Instruction = line.split(" ", 2);
+            int index = 0;
+
+            if (Instruction[0].equals("mark") || Instruction[0].equals("unmark")) {
+                try {
+                    index = Integer.parseInt(Instruction[1]) - 1;
+                } catch (NumberFormatException e) {
+                    index = 0;
                 }
-            } else {
-                results[currentData] = line;
-                currentData += 1;
-                System.out.println("Added: " + line);
             }
 
+            if (line.equals("list")) {
+                System.out.println("Here are the tasks in your list:");
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + "." + "[" + ((tasks.get(i).isDone) ? "X" : " ") + "] " + tasks.get(i).description);
+                }
+            } else if (Instruction[0].equals("mark")) {
+                if (index >= 0 && index < tasks.size()) {
+                    tasks.get(index).markAsDone();
+                    System.out.println("Nice! I've marked this task as done:");
+                    System.out.println("  [" + ((tasks.get(index).isDone) ? "X" : " ") + "] " + tasks.get(index).description);
+                }
+            } else if (Instruction[0].equals("unmark")) {
+                if (index >= 0 && index < tasks.size()) {
+                    tasks.get(index).markAsUndone();
+                    System.out.println("OK, I've marked this task as not done yet:");
+                    System.out.println("  [" + ((tasks.get(index).isDone) ? "X" : " ") + "] " + tasks.get(index).description);
+                }
+            } else {
+                if (!line.equals(ending_line)) {
+                    tasks.add(new Task(line));
+                    System.out.println("Added: " + line);
+                }
+            }
         }
         System.out.println(exit);
 
