@@ -18,7 +18,6 @@ public class Michael {
         String ending_line = "bye";
         String exit = "Bye! Hope to see you again soon!";
 
-
         while (!(line.equals(ending_line))) {
             line = in.nextLine();
             String[] Instruction = line.split(" ", 2);
@@ -57,6 +56,5 @@ public class Michael {
             }
         }
         System.out.println(exit);
-
     }
 }
