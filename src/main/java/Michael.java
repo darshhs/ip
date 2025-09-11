@@ -38,6 +38,7 @@ public class Michael {
     }
 
     public static void createTodo(String input) {
+
         Task t = new Todo(input);
         addTask(t);
     }
@@ -77,40 +78,63 @@ public class Michael {
                 try {
                     index = Integer.parseInt(instruction[1]) - 1;
                 } catch (NumberFormatException e) {
-                    index = 0;
+                    System.out.println("Not a valid number, please try again" );
+                    continue;
                 }
             }
 
             Task currentTask = tasks[index]; //when instruction is mark/unmark, use this variable
 
-            switch (instruction[0]) {
-            case "bye":
-                System.out.println(exit);
-                break;
-            case "list":
-                showList();
-                continue;
-            case "mark":
-                if (index >= 0 && index < numberTasks) {
-                    markTask(currentTask);
+            try {
+                switch (instruction[0]) {
+                case "bye":
+                    System.out.println(exit);
+                    break;
+                case "list":
+                    showList();
+                    continue;
+                case "mark":
+                    if (index >= 0 && index < numberTasks) {
+                        markTask(currentTask);
+                    } else {
+                        throw new NumberRangeException();
+                    }
+                    continue;
+                case "unmark":
+                    if (index >= 0 && index < numberTasks) {
+                        unmarkTask(currentTask);
+                    } else {
+                        throw new NumberRangeException();
+                    }
+                    continue;
+                case "todo":
+                    if (instruction.length < 2) {
+                        throw new EmptyException();
+                    }
+                    createTodo(instruction[1]);
+                    continue;
+                case "deadline":
+                    if (instruction.length < 2) {
+                        throw new EmptyException();
+                    }
+                    createDeadline(instruction[1]);
+                    continue;
+                case "event":
+                    if (instruction.length < 2) {
+                        throw new EmptyException();
+                    }
+                    createEvent(instruction[1]);
+                    continue;
+                default:
+                    throw new UnknownInstructionException();
                 }
-                continue;
-            case "unmark":
-                if (index >= 0 && index < numberTasks) {
-                    unmarkTask(currentTask);
-                }
-                continue;
-            case "todo":
-                createTodo(instruction[1]);
-                continue;
-            case "deadline":
-                createDeadline(instruction[1]);
-                continue;
-            case "event":
-                createEvent(instruction[1]);
-                continue;
-            default:
-                ordinaryTask(line);
+            }
+            catch (EmptyException e) {
+                System.out.println("Oh No! The description of " + instruction[0] + " cannot be empty!");
+            } catch (UnknownInstructionException e) {
+                System.out.println("I don't understand the instruction " + instruction[0] + " :{");
+            } catch (NumberRangeException e) {
+                System.out.println("The number is not within range of the list, please try again");
             }
 
         }
