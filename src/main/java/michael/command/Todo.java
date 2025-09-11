@@ -1,3 +1,7 @@
+package michael.command;
+
+import michael.ui.Task;
+
 public class Todo extends Task {
 
     public Todo(String description) {
