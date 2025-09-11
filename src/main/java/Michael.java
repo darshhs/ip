@@ -94,14 +94,14 @@ public class Michael {
                     showList();
                     continue;
                 case "mark":
-                    if (index >= 0 && index < numberTasks) {
+                    if (index > 0 && index < numberTasks) {
                         markTask(currentTask);
                     } else {
                         throw new NumberRangeException();
                     }
                     continue;
                 case "unmark":
-                    if (index >= 0 && index < numberTasks) {
+                    if (index > 0 && index < numberTasks) {
                         unmarkTask(currentTask);
                     } else {
                         throw new NumberRangeException();
