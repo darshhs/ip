@@ -1,3 +1,7 @@
+package michael.command;
+
+import michael.ui.Task;
+
 public class Event extends Task {
 
     protected String from;

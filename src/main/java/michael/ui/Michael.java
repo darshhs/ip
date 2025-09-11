@@ -1,3 +1,11 @@
+package michael.ui;
+import michael.command.Deadline;
+import michael.command.Event;
+import michael.command.Todo;
+import michael.exception.NumberRangeException;
+import michael.exception.EmptyException;
+import michael.exception.UnknownInstructionException;
+
 import java.util.Scanner;
 
 public class Michael {

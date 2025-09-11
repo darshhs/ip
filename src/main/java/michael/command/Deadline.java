@@ -1,3 +1,7 @@
+package michael.command;
+
+import michael.ui.Task;
+
 public class Deadline extends Task {
 
     protected String by;
