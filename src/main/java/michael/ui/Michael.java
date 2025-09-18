@@ -1,4 +1,5 @@
 package michael.ui;
+
 import michael.command.Deadline;
 import michael.command.Event;
 import michael.command.Todo;
@@ -13,7 +14,7 @@ public class Michael {
     private static ArrayList<Task> tasks = new ArrayList<>();
     private static int numberTasks = 0;
     private static String welcome = "Hello! I'm Michael\n" +
-                                    "What can I do for you?";
+            "What can I do for you?";
     private static String exit = "Bye! Hope to see you again soon!";
     private static String ending_line = "bye";
 
@@ -31,6 +32,7 @@ public class Michael {
         for (int i = 0; i < numberTasks; i++) {
             System.out.println((i + 1) + "." + tasks.get(i).toString());
         }
+        System.out.println("You currently have " + numberTasks + " task(s)");
     }
 
     public static void markTask(int index) {
@@ -65,6 +67,15 @@ public class Michael {
         addTask(t);
     }
 
+    public static void deletetask(int t) {
+        Task removedTask = tasks.get(t);
+        tasks.remove(removedTask);
+        numberTasks--;
+        System.out.println("Of course, I've removed this task:");
+        System.out.println(removedTask);
+        System.out.println("Now you have " + numberTasks + " tasks in the list.");
+    }
+
 
     public static void main(String[] args) {
 
@@ -80,14 +91,15 @@ public class Michael {
 
             int index = 0;
 
-            if (instruction[0].equals("mark") || instruction[0].equals("unmark") ) { //if mark/unmark instruction, decrement integer by one
+            if (instruction[0].equals("mark") || instruction[0].equals("unmark") || instruction[0].equals("delete")) { //if mark/unmark/delete instruction, decrement integer by one
                 try {
                     index = Integer.parseInt(instruction[1]) - 1;
                 } catch (NumberFormatException e) {
-                    System.out.println("Not a valid number, please try again" );
+                    System.out.println("Not a valid number, please try again");
                     continue;
                 }
             }
+
 
             try {
                 switch (instruction[0]) {
@@ -129,11 +141,18 @@ public class Michael {
                     }
                     createEvent(instruction[1]);
                     continue;
+                case "delete":
+                    if (index >= 0 && index < numberTasks) {
+                        deletetask(index);
+                    } else {
+                        throw new NumberRangeException();
+                    }
+                    continue;
                 default:
                     throw new UnknownInstructionException();
                 }
-            }
-            catch (EmptyException e) {
+
+            } catch (EmptyException e) {
                 System.out.println("Oh No! The description of " + instruction[0] + " cannot be empty!");
             } catch (UnknownInstructionException e) {
                 System.out.println("I don't understand the instruction " + instruction[0] + " :{");
