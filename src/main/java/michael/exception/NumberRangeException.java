@@ -1,3 +1,4 @@
 package michael.exception;
-public class NumberRangeException extends Exception{
+
+public class NumberRangeException extends Exception {
 }
