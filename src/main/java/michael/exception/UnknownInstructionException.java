@@ -1,3 +1,4 @@
 package michael.exception;
-public class UnknownInstructionException extends Exception{
+
+public class UnknownInstructionException extends Exception {
 }

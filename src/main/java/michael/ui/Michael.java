@@ -1,4 +1,5 @@
 package michael.ui;
+
 import michael.command.Deadline;
 import michael.command.Event;
 import michael.command.Todo;
@@ -7,19 +8,19 @@ import michael.exception.EmptyException;
 import michael.exception.UnknownInstructionException;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Michael {
-
-    private static Task[] tasks = new Task[100];
+    private static ArrayList<Task> tasks = new ArrayList<>();
     private static int numberTasks = 0;
     private static String welcome = "Hello! I'm Michael\n" +
-                                    "What can I do for you?";
+            "What can I do for you?";
     private static String exit = "Bye! Hope to see you again soon!";
     private static String ending_line = "bye";
 
 
     public static void addTask(Task t) {
-        tasks[numberTasks] = t;
+        tasks.add(t);
         numberTasks++;
         System.out.println("Got it. I've added this task:");
         System.out.println(t);
@@ -29,24 +30,26 @@ public class Michael {
     public static void showList() {
         System.out.println("Hello there! Certainly, here are the tasks in your list:");
         for (int i = 0; i < numberTasks; i++) {
-            System.out.println((i + 1) + "." + tasks[i].toString());
+            System.out.println((i + 1) + "." + tasks.get(i).toString());
         }
+        System.out.println("You currently have " + numberTasks + " task(s)");
     }
 
-    public static void markTask(Task currentTask) {
+    public static void markTask(int index) {
+        Task currentTask = tasks.get(index);
         currentTask.markAsDone(); //mark as done
         System.out.println("Good job! I've marked this task as done:");
         System.out.println(currentTask);
     }
 
-    public static void unmarkTask(Task currentTask) {
+    public static void unmarkTask(int index) {
+        Task currentTask = tasks.get(index);
         currentTask.markAsUndone(); //mark as undone
         System.out.println("Alright, I've marked this task as not done yet:");
         System.out.println(currentTask);
     }
 
     public static void createTodo(String input) {
-
         Task t = new Todo(input);
         addTask(t);
     }
@@ -64,10 +67,15 @@ public class Michael {
         addTask(t);
     }
 
-    public static void ordinaryTask(String input) {
-        Task t = new Task(input);
-        addTask(t);
+    public static void deletetask(int t) {
+        Task removedTask = tasks.get(t);
+        tasks.remove(removedTask);
+        numberTasks--;
+        System.out.println("Of course, I've removed this task:");
+        System.out.println(removedTask);
+        System.out.println("Now you have " + numberTasks + " tasks in the list.");
     }
+
 
     public static void main(String[] args) {
 
@@ -82,16 +90,16 @@ public class Michael {
             String[] instruction = line.split(" ", 2); // split input to find the type of instruction
 
             int index = 0;
-            if (instruction[0].equals("mark") || instruction[0].equals("unmark")) { //if mark/unmark instruction, decrement integer by one
+
+            if (instruction[0].equals("mark") || instruction[0].equals("unmark") || instruction[0].equals("delete")) { //if mark/unmark/delete instruction, decrement integer by one
                 try {
                     index = Integer.parseInt(instruction[1]) - 1;
                 } catch (NumberFormatException e) {
-                    System.out.println("Not a valid number, please try again" );
+                    System.out.println("Not a valid number, please try again");
                     continue;
                 }
             }
 
-            Task currentTask = tasks[index]; //when instruction is mark/unmark, use this variable
 
             try {
                 switch (instruction[0]) {
@@ -102,15 +110,15 @@ public class Michael {
                     showList();
                     continue;
                 case "mark":
-                    if (index > 0 && index < numberTasks) {
-                        markTask(currentTask);
+                    if (index >= 0 && index < numberTasks) {
+                        markTask(index);
                     } else {
                         throw new NumberRangeException();
                     }
                     continue;
                 case "unmark":
-                    if (index > 0 && index < numberTasks) {
-                        unmarkTask(currentTask);
+                    if (index >= 0 && index < numberTasks) {
+                        unmarkTask(index);
                     } else {
                         throw new NumberRangeException();
                     }
@@ -133,11 +141,18 @@ public class Michael {
                     }
                     createEvent(instruction[1]);
                     continue;
+                case "delete":
+                    if (index >= 0 && index < numberTasks) {
+                        deletetask(index);
+                    } else {
+                        throw new NumberRangeException();
+                    }
+                    continue;
                 default:
                     throw new UnknownInstructionException();
                 }
-            }
-            catch (EmptyException e) {
+
+            } catch (EmptyException e) {
                 System.out.println("Oh No! The description of " + instruction[0] + " cannot be empty!");
             } catch (UnknownInstructionException e) {
                 System.out.println("I don't understand the instruction " + instruction[0] + " :{");
