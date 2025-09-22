@@ -52,7 +52,7 @@ public class Michael {
     public static void markTask(int index) {
         Task currentTask = tasks.get(index);
         currentTask.markAsDone(); //mark as done
-        WriteToFile.writeToPosition(dataFile, index,"0", "1");
+        WriteToFile.writeToPosition(dataFile, index, "0", "1");
         System.out.println("Good job! I've marked this task as done:");
         System.out.println(currentTask);
     }
@@ -61,7 +61,7 @@ public class Michael {
         Task currentTask = tasks.get(index);
 
         currentTask.markAsUndone(); //mark as done
-        WriteToFile.writeToPosition(dataFile, index,"1", "0");
+        WriteToFile.writeToPosition(dataFile, index, "1", "0");
         System.out.println("Alright, I've marked this task as not done yet:");
         System.out.println(currentTask);
     }
@@ -94,6 +94,7 @@ public class Michael {
         System.out.println(removedTask);
         System.out.println("Now you have " + numberTasks + " tasks in the list.");
     }
+
     private static void getFileContent(String filePath) throws FileNotFoundException {
         File f = new File(filePath); // create a File for the given file path
         Scanner s = new Scanner(f); // create a Scanner using the File as the source

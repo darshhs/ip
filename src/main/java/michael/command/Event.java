@@ -23,7 +23,7 @@ public class Event extends Task {
 
 
     public void writeFile(String dataFile) {
-        String taskString = taskIndex + ". " + taskType + " | "  +  (isDone ? "1" : "0") + " | " + description + " | " + from + "-" + to;
+        String taskString = taskIndex + ". " + taskType + " | " + (isDone ? "1" : "0") + " | " + description + " | " + from + "-" + to;
         try {
             appendToFile(dataFile, taskString + System.lineSeparator());
         } catch (IOException e) {
@@ -31,7 +31,6 @@ public class Event extends Task {
         }
 
     }
-
 
 
     @Override
