@@ -23,7 +23,6 @@ public class WriteToFile {
         try {
             List<String> lines = Files.readAllLines(filePath);
             int indexToReplace = index;
-
             String line = lines.get(indexToReplace);
             String updatedLine = line.replace(oldData, newData);
             lines.set(indexToReplace, updatedLine);
@@ -34,8 +33,8 @@ public class WriteToFile {
     }
 
 
-    public static void createFile(String filepath) {
-        File f = new File(filepath);
+    public static void createFile(String filePath) {
+        File f = new File(filePath);
 
         try {
             if (f.createNewFile()) {
@@ -47,6 +46,23 @@ public class WriteToFile {
             System.out.println(" :{ an error occurred while creating the file: " + e.getMessage());
         }
 
+    }
+
+    public static void deleteTask(String fileName, int index) {
+        Path filePath = Paths.get(fileName);
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+            int indexToDelete = index;
+            if (indexToDelete >= 0 && indexToDelete < lines.size()) {
+                lines.remove(indexToDelete);
+                Files.write(filePath, lines);
+                System.out.println("Your task has been deleted successfully.");
+            } else {
+                System.out.println("Index out of bounds.");
+            }
+        } catch (IOException e) {
+            System.out.println("Oh no! An error occurred: " + e.getMessage());
+        }
     }
 
 }

@@ -10,8 +10,6 @@ import michael.command.Todo.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -54,7 +52,7 @@ public class Michael {
     public static void markTask(int index) {
         Task currentTask = tasks.get(index);
         currentTask.markAsDone(); //mark as done
-        writeToPosition(dataFile, index,"0", "1");
+        WriteToFile.writeToPosition(dataFile, index,"0", "1");
         System.out.println("Good job! I've marked this task as done:");
         System.out.println(currentTask);
     }
@@ -63,7 +61,7 @@ public class Michael {
         Task currentTask = tasks.get(index);
 
         currentTask.markAsUndone(); //mark as done
-        writeToPosition(dataFile, index,"1", "0");
+        WriteToFile.writeToPosition(dataFile, index,"1", "0");
         System.out.println("Alright, I've marked this task as not done yet:");
         System.out.println(currentTask);
     }
@@ -87,10 +85,11 @@ public class Michael {
         addTask(t, isNew);
     }
 
-    public static void deletetask(int t) {
+    public static void deleteTask(int t) {
         Task removedTask = tasks.get(t);
         tasks.remove(removedTask);
         numberTasks--;
+        WriteToFile.deleteTask(dataFile, t);
         System.out.println("Of course, I've removed this task:");
         System.out.println(removedTask);
         System.out.println("Now you have " + numberTasks + " tasks in the list.");
@@ -107,6 +106,7 @@ public class Michael {
             } else if (line.charAt(3) == 'D') {
                 String taskSub = line.substring(11);
                 String newTaskSub = taskSub.replace("|", "/by");
+//                System.out.println(newTaskSub);
                 createDeadline(newTaskSub, isTaskDone, false);
             } else {
                 String taskSub = line.substring(11);
@@ -125,7 +125,7 @@ public class Michael {
         System.out.println(welcome);
         Scanner in = new Scanner(System.in);
         String line = "";
-        createFile(dataFile);
+        WriteToFile.createFile(dataFile);
 
         try {
             getFileContent(dataFile);
@@ -193,7 +193,7 @@ public class Michael {
                     continue;
                 case "delete":
                     if (index >= 0 && index < numberTasks) {
-                        deletetask(index);
+                        deleteTask(index);
                     } else {
                         throw new NumberRangeException();
                     }
