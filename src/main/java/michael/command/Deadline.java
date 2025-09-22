@@ -2,17 +2,25 @@ package michael.command;
 
 import michael.ui.Task;
 
+
+
 public class Deadline extends Task {
 
     protected String by;
 
-    public Deadline(String description, String by) {
-        super(description);
+    public Deadline(String description, String by, String dataFilePath, int index, boolean isTaskDone, boolean isDataNew) {
+        super(description, index, isTaskDone);
         this.by = by;
+        if (isDataNew) {
+            writeFile(dataFilePath);
+        }
     }
+
+
 
     @Override
     public String toString() {
+
         return "[D]" + super.toString() + " (by: " + by + ")";
     }
 }
