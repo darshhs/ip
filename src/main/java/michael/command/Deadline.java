@@ -2,10 +2,6 @@ package michael.command;
 
 import michael.ui.Task;
 
-import java.io.IOException;
-
-import static michael.ui.WriteToFile.appendToFile;
-
 public class Deadline extends Task {
 
     protected String by;
@@ -18,14 +14,9 @@ public class Deadline extends Task {
         }
     }
 
-    public void writeFile(String dataFile) {
-        String taskString = taskIndex + ". " + taskType + " | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
-        try {
-            appendToFile(dataFile, taskString + System.lineSeparator());
-        } catch (IOException e) {
-            System.out.println("Something went wrong: " + e.getMessage());
-        }
-
+    @Override
+    public String writeFileString() {
+        return super.writeFileString() + " | " + by;
     }
 
 

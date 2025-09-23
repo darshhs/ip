@@ -12,7 +12,7 @@ public class WriteToFile {
 
 
     public static void appendToFile(String filePath, String textToAppend) throws IOException {
-        FileWriter fw = new FileWriter(filePath, true); // create a FileWriter in append mode
+        FileWriter fw = new FileWriter(filePath, true);
         fw.write(textToAppend);
         fw.close();
     }
@@ -55,6 +55,14 @@ public class WriteToFile {
             int indexToDelete = index;
             if (indexToDelete >= 0 && indexToDelete < lines.size()) {
                 lines.remove(indexToDelete);
+                for (int i = 0; i < lines.size(); i++) {
+                    String line = lines.get(i);
+                    int dotPos = line.indexOf('.');
+                    if (dotPos != -1) {
+                        String restOfLine = line.substring(dotPos + 1).trim();
+                        lines.set(i, i+1 + ". " + restOfLine);
+                    }
+                }
                 Files.write(filePath, lines);
                 System.out.println("Your task has been deleted successfully.");
             } else {

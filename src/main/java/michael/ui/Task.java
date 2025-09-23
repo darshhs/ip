@@ -17,6 +17,20 @@ public class Task {
         this.taskIndex = index;
     }
 
+    public String writeFileString() {
+        return taskIndex + ". " + taskType + " | " + (isDone ? "1" : "0") + " | " + description;
+    }
+
+    public void writeFile(String dataFile) {
+        String taskString = writeFileString();
+        try {
+            appendToFile(dataFile, taskString + System.lineSeparator());
+        } catch (IOException e) {
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+
+    }
+
     public String getStatusIcon() {
 
         return (isDone ? "X" : " "); // mark done task with X
