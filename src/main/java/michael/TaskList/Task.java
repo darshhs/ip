@@ -10,6 +10,14 @@ public class Task {
     protected String taskType;
     protected int taskIndex;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public int getTaskIndex() {
+        return taskIndex;
+    }
+
     public Task(String description, int index, String taskType, boolean isTaskDone) {
         this.description = description;
         this.isDone = isTaskDone;
