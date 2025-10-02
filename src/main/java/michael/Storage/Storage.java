@@ -70,20 +70,24 @@ public class Storage {
 
     }
 
+    public void formatFileAfterDelete(List<String> lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            int dotPos = line.indexOf('.');
+            if (dotPos != -1) {
+                String restOfLine = line.substring(dotPos + 1).trim();
+                lines.set(i, i + 1 + ". " + restOfLine);
+            }
+        }
+    }
+
     public void deleteTask(int index) {
         Path filePath = Paths.get(fileName);
         try {
             List<String> lines = Files.readAllLines(filePath);
             if (index >= 0 && index < lines.size()) {
                 lines.remove(index);
-                for (int i = 0; i < lines.size(); i++) {
-                    String line = lines.get(i);
-                    int dotPos = line.indexOf('.');
-                    if (dotPos != -1) {
-                        String restOfLine = line.substring(dotPos + 1).trim();
-                        lines.set(i, i + 1 + ". " + restOfLine);
-                    }
-                }
+                formatFileAfterDelete(lines);
                 Files.write(filePath, lines);
                 System.out.println("Your task has been deleted successfully.");
             } else {
@@ -113,37 +117,35 @@ public class Storage {
         while (s.hasNext()) {
             String line = s.nextLine();
             int dotPos = line.indexOf('.');
-            if (dotPos != -1) {
-                String restOfLine = line.substring(dotPos + 1);
-                isTaskDone = restOfLine.charAt(5) == '1';
-                if (restOfLine.charAt(1) == 'T') {
+            String restOfLine = line.substring(dotPos + 1);
+            isTaskDone = restOfLine.charAt(5) == '1';
+            if (restOfLine.charAt(1) == 'T') {
 
-                    task = new Todo(restOfLine.substring(9), dataFile, numberTasks + 1, isTaskDone, false);
-                    addCommand = new AddCommand(task, false);
-                    addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
+                task = new Todo(restOfLine.substring(9), dataFile, numberTasks + 1, isTaskDone, false);
+                addCommand = new AddCommand(task, false);
+                addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
 
-                } else if (restOfLine.charAt(1) == 'D') {
+            } else if (restOfLine.charAt(1) == 'D') {
 
-                    String taskSub = restOfLine.substring(9);
-                    String newTaskSub = "deadline " + taskSub.replace("|", "/by");
-                    ParseInput deadlinerParser = new ParseInput(newTaskSub);
-                    String[] deadlineInstruction = deadlinerParser.parseDeadline();
+                String taskSub = restOfLine.substring(9);
+                String newTaskSub = "deadline " + taskSub.replace("|", "/by");
+                ParseInput deadlinerParser = new ParseInput(newTaskSub);
+                String[] deadlineInstruction = deadlinerParser.parseDeadline();
 
-                    task = new Deadline(deadlineInstruction[0], deadlineInstruction[1], dataFile, numberTasks + 1, isTaskDone, false);
-                    addCommand = new AddCommand(task, false);
-                    addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
+                task = new Deadline(deadlineInstruction[0], deadlineInstruction[1], dataFile, numberTasks + 1, isTaskDone, false);
+                addCommand = new AddCommand(task, false);
+                addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
 
-                } else {
-                    String taskSub = restOfLine.substring(9);
-                    String newTaskSub = taskSub.replace("|", "/from");
-                    newTaskSub = "event " + newTaskSub.replace("-", " /to ");
-                    ParseInput eventParser = new ParseInput(newTaskSub);
-                    String[] eventInstruction = eventParser.parseEvent();
+            } else {
+                String taskSub = restOfLine.substring(9);
+                String newTaskSub = taskSub.replace("|", "/from");
+                newTaskSub = "event " + newTaskSub.replace("-", " /to ");
+                ParseInput eventParser = new ParseInput(newTaskSub);
+                String[] eventInstruction = eventParser.parseEvent();
 
-                    task = new Event(eventInstruction[0], eventInstruction[1], eventInstruction[2], dataFile, numberTasks + 1, isTaskDone, false);
-                    addCommand = new AddCommand(task, false);
-                    addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
-                }
+                task = new Event(eventInstruction[0], eventInstruction[1], eventInstruction[2], dataFile, numberTasks + 1, isTaskDone, false);
+                addCommand = new AddCommand(task, false);
+                addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
             }
         }
     }
