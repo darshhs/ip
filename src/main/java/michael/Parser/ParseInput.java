@@ -81,6 +81,9 @@ public class ParseInput {
                 return new AddCommand(task, true);
             case "delete":
                 return new DeleteCommand(currentTaskIndex);
+            case "find":
+                return new FindCommand(instructionListCreated[1]);
+
 
             default:
                 throw new UnknownInstructionException();
