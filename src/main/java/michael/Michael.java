@@ -1,207 +1,41 @@
 package michael;
 
-import michael.command.Deadline;
-import michael.command.Event;
-import michael.command.Todo;
-import michael.exception.NumberRangeException;
-import michael.exception.EmptyException;
-import michael.exception.UnknownInstructionException;
-import michael.ui.Task;
-import michael.ui.WriteToFile;
-import michael.ui.UserMessages;
+import michael.command.Command;
+import michael.Parser.ParseInput;
+import michael.TaskList.Task;
+import michael.Storage.Storage;
+import michael.Ui.UserMessages;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+
 public class Michael {
 
-    private static ArrayList<Task> tasks = new ArrayList<>();
-    protected static int numberTasks = 0;
-    private static String ending_line = "bye";
-
-    private static String home = System.getProperty("user.home");
-    private static java.nio.file.Path dataPath = java.nio.file.Paths.get(home, "michael.txt");
-    private static String dataFile = String.valueOf(dataPath);
-
-
-    public static void addTask(Task t, boolean isDataNew) {
-        tasks.add(t);
-        numberTasks++;
-        if (isDataNew) {
-            UserMessages.addTaskMessage(t,numberTasks);
-        }
-    }
-
-    public static void showList() {
-        System.out.println("Hello there! Certainly, here are the tasks in your list:");
-        for (int i = 0; i < numberTasks; i++) {
-            System.out.println((i + 1) + "." + tasks.get(i).toString());
-        }
-        System.out.println("You currently have " + numberTasks + " task(s)");
-    }
-
-    public static void markTask(int index) {
-        Task currentTask = tasks.get(index);
-        currentTask.markAsDone(); //mark as done
-        WriteToFile.writeToPosition(dataFile, index, "0", "1");
-        UserMessages.markTaskMessage();
-        System.out.println(currentTask);
-    }
-
-    public static void unmarkTask(int index) {
-        Task currentTask = tasks.get(index);
-        currentTask.markAsUndone(); //mark as done
-        WriteToFile.writeToPosition(dataFile, index, "1", "0");
-        UserMessages.unmarkTaskMessage();
-        System.out.println(currentTask);
-    }
-
-
-    public static void createTodo(String input, boolean isTaskDone, boolean isNew) {
-        Task t = new Todo(input, dataFile, numberTasks + 1, isTaskDone, isNew);
-        addTask(t, isNew);
-    }
-
-    public static void createDeadline(String input, boolean isTaskDone, boolean isNew) {
-        String[] deadlineInstruction = input.split(" /by ", 2);
-        Task t = new Deadline(deadlineInstruction[0], deadlineInstruction[1], dataFile, numberTasks + 1, isTaskDone, isNew);
-        addTask(t, isNew);
-    }
-
-    public static void createEvent(String input, boolean isTaskDone, boolean isNew) {
-        String[] eventInstruction = input.split(" /from ", 2);
-        String[] eventDuration = eventInstruction[1].split(" /to ", 2);
-        Task t = new Event(eventInstruction[0], eventDuration[0], eventDuration[1], dataFile, numberTasks + 1, isTaskDone, isNew);
-        addTask(t, isNew);
-    }
-
-    public static void deleteTask(int t) {
-        Task removedTask = tasks.get(t);
-        tasks.remove(removedTask);
-        numberTasks--;
-        WriteToFile.deleteTask(dataFile, t);
-        UserMessages.deleteTaskMessage(removedTask,numberTasks);
-    }
-
-    private static void getFileContent(String filePath) throws FileNotFoundException {
-        File f = new File(filePath);
-        Scanner s = new Scanner(f);
-        boolean isTaskDone;
-        while (s.hasNext()) {
-            String line = s.nextLine();
-            int dotPos = line.indexOf('.');
-            if (dotPos != -1) {
-                String restOfLine = line.substring(dotPos + 1);
-                isTaskDone = restOfLine.charAt(5) == '1';
-                if (restOfLine.charAt(1) == 'T') {
-                    createTodo(restOfLine.substring(9), isTaskDone, false);
-                } else if (restOfLine.charAt(1) == 'D') {
-                    String taskSub = restOfLine.substring(9);
-                    String newTaskSub = taskSub.replace("|", "/by");
-                    createDeadline(newTaskSub, isTaskDone, false);
-                } else {
-                    String taskSub = restOfLine.substring(9);
-                    String newTaskSub = taskSub.replace("|", "/from");
-                    newTaskSub = newTaskSub.replace("-", " /to ");
-                    createEvent(newTaskSub, isTaskDone, false);
-                }
-            }
-        }
-
-    }
+    public static ArrayList<Task> tasks = new ArrayList<>();
+    public static int numberTasks = 0;
+    public static String ending_line = "bye";
+    public static String dataFile = "./data/data.txt";
 
 
     public static void main(String[] args) {
 
-        UserMessages.welcomeMessage();
+        UserMessages messages = new UserMessages();
+        messages.welcomeMessage();
+
         Scanner in = new Scanner(System.in);
         String line = "";
-        WriteToFile.createFile(dataFile);
 
-        try {
-            getFileContent(dataFile);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Storage storageFile = new Storage(dataFile);
+        storageFile.getFileData();
+
 
         while (!(line.equals(ending_line))) {
 
-            line = in.nextLine();   //user input
-
-            String[] instruction = line.split(" ", 2); // split input to find the type of instruction
-
-            int index = 0;
-
-            if (instruction[0].equals("mark") || instruction[0].equals("unmark") || instruction[0].equals("delete")) { //if mark/unmark/delete instruction, decrement integer by one
-                try {
-                    index = Integer.parseInt(instruction[1]) - 1;
-                } catch (NumberFormatException e) {
-                    System.out.println("Not a valid number, please try again");
-                    continue;
-                }
-            }
-
-            try {
-                switch (instruction[0]) {
-                case "bye":
-                    UserMessages.exitMessage();
-                    break;
-                case "list":
-                    showList();
-                    break;
-                case "mark":
-                    if (index >= 0 && index < numberTasks) {
-                        markTask(index);
-                    } else {
-                        throw new NumberRangeException();
-                    }
-                    break;
-                case "unmark":
-                    if (index >= 0 && index < numberTasks) {
-                        unmarkTask(index);
-                    } else {
-                        throw new NumberRangeException();
-                    }
-                    break;
-                case "todo":
-                    if (instruction.length < 2) {
-                        throw new EmptyException();
-                    }
-                    createTodo(instruction[1], false, true);
-
-                    break;
-                case "deadline":
-                    if (instruction.length < 2) {
-                        throw new EmptyException();
-                    }
-                    createDeadline(instruction[1], false, true);
-                    break;
-                case "event":
-                    if (instruction.length < 2) {
-                        throw new EmptyException();
-                    }
-                    createEvent(instruction[1], false, true);
-                    break;
-                case "delete":
-                    if (index >= 0 && index < numberTasks) {
-                        deleteTask(index);
-                    } else {
-                        throw new NumberRangeException();
-                    }
-                    break;
-                default:
-                    throw new UnknownInstructionException();
-                }
-
-            } catch (EmptyException e) {
-                System.out.println("Oh No! The description of " + instruction[0] + " cannot be empty!");
-            } catch (UnknownInstructionException e) {
-                System.out.println("I don't understand the instruction " + instruction[0] + " :{");
-            } catch (NumberRangeException e) {
-                System.out.println("The number is not within range of the list, please try again");
-            }
+            line = in.nextLine();
+            ParseInput parser = new ParseInput(line);
+            Command command = parser.parse();
+            command.execute(tasks, messages, storageFile);
 
         }
     }

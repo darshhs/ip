@@ -1,6 +1,4 @@
-package michael.command;
-
-import michael.ui.Task;
+package michael.TaskList;
 
 public class Deadline extends Task {
 

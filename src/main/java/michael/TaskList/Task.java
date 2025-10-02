@@ -1,8 +1,8 @@
-package michael.ui;
+package michael.TaskList;
 
 import java.io.IOException;
 
-import static michael.ui.WriteToFile.appendToFile;
+import static michael.Storage.Storage.appendToFile;
 
 public class Task {
     protected String description;
