@@ -22,6 +22,7 @@ public class Michael {
     /**
      * Main method to start the Michael application.
      * Initializes UI, loads tasks from storage, and enters the command loop.
+     *
      * @param args Command-line arguments
      */
     public static void main(String[] args) {

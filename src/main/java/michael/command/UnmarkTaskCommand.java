@@ -32,9 +32,8 @@ public class UnmarkTaskCommand extends Command {
     @Override
     public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         Task currentTask = tasks.get(currentTaskIndex);
-        currentTask.markAsUndone(); // mark as not done
+        currentTask.markAsUndone();
         storage.writeToPosition(currentTaskIndex, "0", "1");
-        ui.unmarkTaskMessage();
-        System.out.println(currentTask);
+        ui.unmarkTaskMessage(currentTask);
     }
 }

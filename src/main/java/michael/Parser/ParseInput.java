@@ -46,13 +46,13 @@ public class ParseInput {
      * it converts the supplied number to a zero-based index.
      */
     public void parseIndex() {
-        int index = 0;
+        int index;
         if (instructionListCreated[0].equals("mark") || instructionListCreated[0].equals("unmark") || instructionListCreated[0].equals("delete")) {
             try {
                 index = Integer.parseInt(instructionListCreated[1]) - 1;
                 this.currentTaskIndex = index;
             } catch (NumberFormatException e) {
-                System.out.println("Not a valid number, please try again");
+                this.currentTaskIndex = -1;
             }
         }
     }
@@ -118,7 +118,11 @@ public class ParseInput {
                 task = new Event(eventInstruction[0], eventInstruction[1], eventInstruction[2], dataFile, numberTasks + 1, false, true);
                 return new AddCommand(task, true);
             case "delete":
-                return new DeleteCommand(currentTaskIndex);
+                if (currentTaskIndex >= 0 && currentTaskIndex < numberTasks) {
+                    return new DeleteCommand(currentTaskIndex);
+                } else {
+                    throw new NumberRangeException();
+                }
             case "find":
                 return new FindCommand(instructionListCreated[1]);
             default:

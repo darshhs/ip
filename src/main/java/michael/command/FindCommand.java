@@ -15,6 +15,7 @@ public class FindCommand extends Command {
 
     /**
      * Constructs a FindCommand with the specified query.
+     *
      * @param query The string to search for in task descriptions
      */
     public FindCommand(String query) {
@@ -23,20 +24,22 @@ public class FindCommand extends Command {
 
     /**
      * Executes the find command, displaying tasks that match the query.
-     * @param tasks The list of tasks
-     * @param ui The user interface for messages
+     *
+     * @param tasks   The list of tasks
+     * @param ui      The user interface for messages
      * @param storage The storage handler
      */
     @Override
     public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         ui.findTasksMessage();
-        int index = 1;
+        int index;
         for (Task task : tasks) {
             if (task.getDescription().contains(query)) {
                 index = task.getTaskIndex();
                 System.out.println(index + ". " + task);
             }
         }
+        ui.border();
     }
 
 }

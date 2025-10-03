@@ -33,9 +33,8 @@ public class MarkTaskCommand extends Command {
     @Override
     public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         Task currentTask = tasks.get(currentTaskIndex);
-        currentTask.markAsDone(); // mark as done
+        currentTask.markAsDone();
         storage.writeToPosition(currentTaskIndex, "0", "1");
-        ui.markTaskMessage();
-        System.out.println(currentTask);
+        ui.markTaskMessage(currentTask);
     }
 }
