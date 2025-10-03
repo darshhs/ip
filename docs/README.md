@@ -4,7 +4,7 @@
 Michael is a simple command-line task manager that helps you keep track of your todos, deadlines, and events. You can add, list, mark, unmark, delete, and find tasks easily.
 
 
-<img src= "/docs/img.png" >
+<img src= "" >https://github.com/darshhs/ip/blob/master/docs/img.png?raw=true
 
 
 ## Quick Start
