@@ -22,18 +22,18 @@ Add a new task to your list. Supported types: todo, deadline, event.
 #### Usage
 - **Todo:** `todo <description>`
 - **Deadline:** `deadline <description> /by <date/time>`
-- **Event:** `event <description> /at <date/time>`
+- **Event:** `event <description> /from < start date/time> /to <end date/time>`
 
 #### Example
 ```
 todo read book
 deadline submit report /by Sunday
-event team meeting /at Monday 2pm
+event team meeting /from Monday 2pm /to Monday 4pm
 ```
 
 #### Expected Output
 ```
-Got it. I've added this task:
+Boom! Instant classic task, added:
   [T][ ] read book
 Now you have 1 task(s) in the list.
 ```
@@ -56,7 +56,7 @@ list
 Hello there! Certainly, here are the tasks in your list:
 1.[T][ ] read book
 2.[D][ ] submit report (by: Sunday)
-3.[E][ ] team meeting (at: Monday 2pm)
+3.[E][ ] team meeting (from: Monday 2pm to: Monday 4pm)
 You currently have 3 task(s)
 ```
 
@@ -75,7 +75,7 @@ mark 2
 
 #### Expected Output
 ```
-Nice! I've marked this task as done:
+Yes! Task is done. I am very proud of you. Like, manager-of-the-year proud:
 [D][X] submit report (by: Sunday)
 ```
 
@@ -94,7 +94,7 @@ unmark 2
 
 #### Expected Output
 ```
-OK, I've marked this task as not done yet:
+I’m not superstitious, but I am a little ’stitious… Let’s unmark that task:
 [D][ ] submit report (by: Sunday)
 ```
 
@@ -113,7 +113,7 @@ delete 1
 
 #### Expected Output
 ```
-Noted. I've removed this task:
+Goodbye, task. The worst thing about tasks was the dementors. Just kidding. Deleted:
 [T][ ] read book
 Now you have 2 task(s) in the list.
 ```
