@@ -6,8 +6,8 @@ import michael.TaskList.Event;
 import michael.TaskList.Task;
 import michael.TaskList.Todo;
 import michael.Ui.UserMessages;
-import michael.command.AddCommand;
-import michael.command.Command;
+import michael.Command.AddCommand;
+import michael.Command.Command;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -159,8 +159,6 @@ public class Storage {
     public void getFileData() {
         File f = new File(dataFile);
         Scanner s;
-        Task task;
-        Command addCommand;
         try {
             s = new Scanner(f);
         } catch (FileNotFoundException e) {
@@ -173,33 +171,59 @@ public class Storage {
             String restOfLine = line.substring(dotPos + 1);
             isTaskDone = restOfLine.charAt(5) == '1';
             if (restOfLine.charAt(1) == 'T') {
-
-                task = new Todo(restOfLine.substring(9), dataFile, numberTasks + 1, isTaskDone, false);
-                addCommand = new AddCommand(task, false);
-                addCommand.execute(tasks, new UserMessages(), new Storage(dataFile));
-
+                loadTodo(restOfLine, isTaskDone);
             } else if (restOfLine.charAt(1) == 'D') {
-
-                String taskSub = restOfLine.substring(9);
-                String newTaskSub = "deadline " + taskSub.replace("|", "/by");
-                ParseInput deadlinerParser = new ParseInput(newTaskSub);
-                String[] deadlineInstruction = deadlinerParser.parseDeadline();
-
-                task = new Deadline(deadlineInstruction[0], deadlineInstruction[1], dataFile, numberTasks + 1, isTaskDone, false);
-                addCommand = new AddCommand(task, false);
-                addCommand.execute(tasks, new UserMessages(), new Storage(dataFile));
-
+                loadDeadline(restOfLine, isTaskDone);
             } else {
-                String taskSub = restOfLine.substring(9);
-                String newTaskSub = taskSub.replace("|", "/from");
-                newTaskSub = "event " + newTaskSub.replace("-", " /to ");
-                ParseInput eventParser = new ParseInput(newTaskSub);
-                String[] eventInstruction = eventParser.parseEvent();
-
-                task = new Event(eventInstruction[0], eventInstruction[1], eventInstruction[2], dataFile, numberTasks + 1, isTaskDone, false);
-                addCommand = new AddCommand(task, false);
-                addCommand.execute(tasks, new UserMessages(), new Storage(dataFile));
+                loadEvent(restOfLine, isTaskDone);
             }
         }
+    }
+
+    /**
+     * Loads a Todo task from the file data and adds it to the task list.
+     *
+     * @param restOfLine Remaining line content after the task index
+     * @param isTaskDone Boolean indicating if the task is marked as done
+     */
+    public void loadTodo(String restOfLine, boolean isTaskDone) {
+        Task task = new Todo(restOfLine.substring(9), dataFile, numberTasks + 1, isTaskDone, false);
+        Command addCommand = new AddCommand(task, false);
+        addCommand.executeCommand(tasks, new UserMessages(), new Storage(dataFile));
+    }
+
+    /**
+     * Loads a Deadline task from the file data and adds it to the task list.
+     *
+     * @param restOfLine Remaining line content after the task index
+     * @param isTaskDone Boolean indicating if the task is marked as done
+     */
+    public void loadDeadline(String restOfLine, boolean isTaskDone) {
+        String taskSub = restOfLine.substring(9);
+        String newTaskSub = "deadline " + taskSub.replace("|", "/by");
+        ParseInput deadlinerParser = new ParseInput(newTaskSub);
+        String[] deadlineInstruction = deadlinerParser.parseDeadline();
+
+        Task task = new Deadline(deadlineInstruction[0], deadlineInstruction[1], dataFile, numberTasks + 1, isTaskDone, false);
+        Command addCommand = new AddCommand(task, false);
+        addCommand.executeCommand(tasks, new UserMessages(), new Storage(dataFile));
+    }
+
+    /**
+     * Loads an Event task from the file data and adds it to the task list.
+     *
+     * @param restOfLine Remaining line content after the task index
+     * @param isTaskDone Boolean indicating if the task is marked as done
+     */
+    public void loadEvent(String restOfLine, boolean isTaskDone) {
+        String taskSub = restOfLine.substring(9);
+        String newTaskSub = taskSub.replace("|", "/from");
+        newTaskSub = "event " + newTaskSub.replace("-", " /to ");
+        ParseInput eventParser = new ParseInput(newTaskSub);
+        String[] eventInstruction = eventParser.parseEvent();
+
+        Task task = new Event(eventInstruction[0], eventInstruction[1], eventInstruction[2], dataFile, numberTasks + 1, isTaskDone, false);
+        Command addCommand = new AddCommand(task, false);
+        addCommand.executeCommand(tasks, new UserMessages(), new Storage(dataFile));
     }
 }

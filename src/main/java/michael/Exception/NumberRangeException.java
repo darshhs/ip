@@ -10,7 +10,7 @@ public class NumberRangeException extends Exception {
      *
      * @return The error message for out-of-range numbers
      */
-    public String notInRange() {
+    public String notInRangeMessage() {
         return "Oh no! the number you have given is not within range, please try again";
     }
 }

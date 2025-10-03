@@ -1,4 +1,4 @@
-package michael.command;
+package michael.Command;
 
 import michael.Storage.Storage;
 import michael.TaskList.Task;
@@ -30,7 +30,7 @@ public class UnmarkTaskCommand extends Command {
      * @param storage The storage handler
      */
     @Override
-    public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
+    public void executeCommand(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         Task currentTask = tasks.get(currentTaskIndex);
         currentTask.markAsUndone();
         storage.writeToPosition(currentTaskIndex, "0", "1");

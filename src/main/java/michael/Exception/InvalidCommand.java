@@ -3,7 +3,7 @@ package michael.Exception;
 import michael.Storage.Storage;
 import michael.TaskList.Task;
 import michael.Ui.UserMessages;
-import michael.command.Command;
+import michael.Command.Command;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class InvalidCommand extends Command {
      * @param storage The storage handler
      */
     @Override
-    public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
+    public void executeCommand(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         System.out.println(errorMsg);
     }
 }

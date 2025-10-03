@@ -1,4 +1,4 @@
-package michael.command;
+package michael.Command;
 
 import michael.Storage.Storage;
 import michael.TaskList.Task;
@@ -25,7 +25,7 @@ public class ExitCommand extends Command {
      * @param storage The storage handler
      */
     @Override
-    public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
+    public void executeCommand(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         ui.exitMessage();
     }
 

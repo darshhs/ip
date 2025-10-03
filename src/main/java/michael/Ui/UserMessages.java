@@ -2,6 +2,10 @@ package michael.Ui;
 
 import michael.TaskList.Task;
 
+import java.util.ArrayList;
+
+import static michael.Michael.numberTasks;
+
 /**
  *
  * This class handles user-facing messages for the chatbot.
@@ -37,6 +41,7 @@ public class UserMessages {
         border();
         String message = "Okay team, that’s a wrap. I am leaving. Goodbye.";
         System.out.println(message);
+        border();
     }
 
     /**
@@ -80,6 +85,19 @@ public class UserMessages {
         System.out.println("Goodbye, task. The worst thing about tasks was the dementors. Just kidding. Deleted:");
         System.out.println(removedTask);
         System.out.println("Now you have " + numberTasks + " task(s) in the list.");
+        border();
+    }
+
+    /**
+     * Prints message when users asks to see the list of tasks
+     */
+    public void showListMessage(ArrayList<Task> tasks, int numberTasks) {
+        border();
+        System.out.println("Hello there! Certainly, here are the tasks in your list:");
+        for (int i = 0; i < numberTasks; i++) {
+            System.out.println((i + 1) + "." + tasks.get(i).toString());
+        }
+        System.out.println("You currently have " + numberTasks + " task(s)");
         border();
     }
 

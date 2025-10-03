@@ -1,4 +1,4 @@
-package michael.command;
+package michael.Command;
 
 import michael.Storage.Storage;
 import michael.Ui.UserMessages;
@@ -18,5 +18,5 @@ public abstract class Command {
      * @param ui      The user interface for messages
      * @param storage The storage handler
      */
-    public abstract void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage);
+    public abstract void executeCommand(ArrayList<Task> tasks, UserMessages ui, Storage storage);
 }

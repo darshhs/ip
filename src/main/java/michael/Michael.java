@@ -1,6 +1,6 @@
 package michael;
 
-import michael.command.Command;
+import michael.Command.Command;
 import michael.Parser.ParseInput;
 import michael.TaskList.Task;
 import michael.Storage.Storage;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Michael {
     public static ArrayList<Task> tasks = new ArrayList<>();
     public static int numberTasks = 0;
-    public static String ending_line = "bye";
+    public static String endingLine = "bye";
     public static String dataFile = "./data/data.txt";
 
     /**
@@ -38,12 +38,12 @@ public class Michael {
 
 
         // Main loop: reads user input, parses commands, and executes them until 'bye' is entered
-        while (!(line.equals(ending_line))) {
+        while (!(line.equals(endingLine))) {
 
             line = in.nextLine();
             ParseInput parser = new ParseInput(line);
             Command command = parser.parse();
-            command.execute(tasks, messages, storageFile);
+            command.executeCommand(tasks, messages, storageFile);
 
         }
     }

@@ -1,4 +1,4 @@
-package michael.command;
+package michael.Command;
 
 import michael.Storage.Storage;
 import michael.TaskList.Task;
@@ -33,12 +33,11 @@ public class DeleteCommand extends Command {
      * @param storage The storage handler
      */
     @Override
-    public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
+    public void executeCommand(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         Task removedTask = tasks.get(currentTaskIndex);
         tasks.remove(removedTask);
         numberTasks--;
         storage.deleteTask(currentTaskIndex);
         ui.deleteTaskMessage(removedTask, numberTasks);
-
     }
 }

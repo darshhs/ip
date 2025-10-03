@@ -10,7 +10,7 @@ public class UnknownInstructionException extends Exception {
      *
      * @return The error message for unknown instructions
      */
-    public String unknownInstruction() {
+    public String unknownInstructionMessage() {
         return "I don't understand your instruction :{ Please try again";
     }
 }

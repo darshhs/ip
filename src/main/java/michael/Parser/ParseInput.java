@@ -4,7 +4,7 @@ import michael.Exception.InvalidCommand;
 import michael.Exception.NumberRangeException;
 import michael.Exception.UnknownInstructionException;
 import michael.TaskList.*;
-import michael.command.*;
+import michael.Command.*;
 
 import static michael.Michael.dataFile;
 import static michael.Michael.numberTasks;
@@ -129,9 +129,9 @@ public class ParseInput {
                 throw new UnknownInstructionException();
             }
         } catch (UnknownInstructionException e) {
-            return new InvalidCommand("Unknown instruction: " + e.unknownInstruction());
+            return new InvalidCommand("Unknown instruction: " + e.unknownInstructionMessage());
         } catch (NumberRangeException e) {
-            return new InvalidCommand("Number not within range: " + e.notInRange());
+            return new InvalidCommand("Number not within range: " + e.notInRangeMessage());
         }
     }
 }
