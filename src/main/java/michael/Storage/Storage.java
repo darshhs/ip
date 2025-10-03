@@ -21,19 +21,46 @@ import java.util.Scanner;
 
 import static michael.Michael.*;
 
+/**
+ * This class manages storage operations for tasks.
+ * It provides utility methods to create and update the data file
+ * where tasks are stored, append new task data, update or delete existing entries,
+ * and read tasks from the file to reconstruct the current task list.
+ */
 public class Storage {
 
-    private String fileName = "./data/data.txt";
 
-    public static void appendToFile(String filePath, String textToAppend) throws IOException {
-        FileWriter fw = new FileWriter(filePath, true);
-        fw.write(textToAppend);
-        fw.close();
+    /**
+     * Appends a given text to the end of the specified file, and throws an error if its is not able to append to file.
+     *
+     * @param filePath     Path to the file to append to
+     * @param textToAppend The textual data to add
+     */
+    public static void appendToFile(String filePath, String textToAppend) {
+        FileWriter fw;
+        try {
+            fw = new FileWriter(filePath, true);
+            fw.write(textToAppend);
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Oh no, I can't add the task to your file :{. " +
+                    "Please make sure the file follows this path, '/home/ip/data'");
+            throw new RuntimeException(e);
+        }
+
     }
 
-
+    /**
+     * Updates data at a specified index in the file, replacing old data with new data.
+     *
+     * @param index   Line number to update
+     * @param oldData The original text within the line to replace
+     *                (i.e. whether the task is marked / unmarked)
+     * @param newData The new text to be inserted in place of oldData
+     *                (i.e. whether the user wishes to mark / unmark task)
+     */
     public void writeToPosition(int index, String oldData, String newData) {
-        Path filePath = Paths.get(fileName);
+        Path filePath = Paths.get(dataFile);
         try {
             List<String> lines = Files.readAllLines(filePath);
             String line = lines.get(index);
@@ -45,11 +72,15 @@ public class Storage {
         }
     }
 
-
+    /**
+     * Creates a new file at the given path
+     * Creates any necessary parent directories if it does not exist
+     *
+     * @param filePath Path to the file to create
+     */
     public void createFile(String filePath) {
         File f = new File(filePath);
         File parentDir = f.getParentFile();
-
 
         if (parentDir != null && !parentDir.exists()) {
             if (parentDir.mkdirs()) {
@@ -70,6 +101,12 @@ public class Storage {
 
     }
 
+    /**
+     * Re-formats the file data for tasks after a deletion, refreshing line indices so
+     * task numbers are sequential. Called mainly after a line is removed.
+     *
+     * @param lines List of lines representing tasks in the file
+     */
     public void formatFileAfterDelete(List<String> lines) {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
@@ -81,8 +118,14 @@ public class Storage {
         }
     }
 
+    /**
+     * Removes a task at the specified index from the file, then updates all
+     * remaining entries so their indices are consistent.
+     *
+     * @param index Line number of the task to delete
+     */
     public void deleteTask(int index) {
-        Path filePath = Paths.get(fileName);
+        Path filePath = Paths.get(dataFile);
         try {
             List<String> lines = Files.readAllLines(filePath);
             if (index >= 0 && index < lines.size()) {
@@ -98,14 +141,24 @@ public class Storage {
         }
     }
 
-    public Storage(String fileName) {
-        this.fileName = fileName;
-        createFile(fileName);
+    /**
+     * Constructor for the Storage class.
+     * Initializes the file name and ensures the file exists.
+     *
+     * @param dataFile Path of the data file for task storage
+     */
+    public Storage(String dataFile) {
+        createFile(dataFile);
     }
 
+    /**
+     * Reads all tasks from the data file and reconstructs them as Task objects.
+     * Uses specific parsers and commands for each type (Todo, Deadline, Event) and
+     * executes commands to add them to the active task list.
+     */
     public void getFileData() {
-        File f = new File(fileName);
-        Scanner s = null;
+        File f = new File(dataFile);
+        Scanner s;
         Task task;
         Command addCommand;
         try {
@@ -123,7 +176,7 @@ public class Storage {
 
                 task = new Todo(restOfLine.substring(9), dataFile, numberTasks + 1, isTaskDone, false);
                 addCommand = new AddCommand(task, false);
-                addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
+                addCommand.execute(tasks, new UserMessages(), new Storage(dataFile));
 
             } else if (restOfLine.charAt(1) == 'D') {
 
@@ -134,7 +187,7 @@ public class Storage {
 
                 task = new Deadline(deadlineInstruction[0], deadlineInstruction[1], dataFile, numberTasks + 1, isTaskDone, false);
                 addCommand = new AddCommand(task, false);
-                addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
+                addCommand.execute(tasks, new UserMessages(), new Storage(dataFile));
 
             } else {
                 String taskSub = restOfLine.substring(9);
@@ -145,9 +198,8 @@ public class Storage {
 
                 task = new Event(eventInstruction[0], eventInstruction[1], eventInstruction[2], dataFile, numberTasks + 1, isTaskDone, false);
                 addCommand = new AddCommand(task, false);
-                addCommand.execute(tasks, new UserMessages(), new Storage(fileName));
+                addCommand.execute(tasks, new UserMessages(), new Storage(dataFile));
             }
         }
     }
 }
-
