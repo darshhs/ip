@@ -157,21 +157,6 @@ Bye. Hope to see you again soon!
 
 ---
 
-## Command Summary
-| Command         | Format                                 |
-|-----------------|----------------------------------------|
-| Add Todo        | todo <description>                     |
-| Add Deadline    | deadline <description> /by <date/time> |
-| Add Event       | event <description> /at <date/time>    |
-| List Tasks      | list                                   |
-| Mark Task       | mark <task_number>                     |
-| Unmark Task     | unmark <task_number>                   |
-| Delete Task     | delete <task_number>                   |
-| Find Task       | find <keyword>                         |
-| Exit            | bye                                    |
-
----
-
 ## FAQ
 - **Where are my tasks saved?**
     - Tasks are saved in the `data/data.txt` file.
