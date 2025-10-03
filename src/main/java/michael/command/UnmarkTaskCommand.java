@@ -6,21 +6,35 @@ import michael.Ui.UserMessages;
 
 import java.util.ArrayList;
 
-public class UnmarkTaskCommand extends Command{
-
+/**
+ * Represents a command to unmark a task as done (mark as not completed).
+ * Updates the task status and storage, and displays a message.
+ */
+public class UnmarkTaskCommand extends Command {
     private final int currentTaskIndex;
 
+    /**
+     * Constructs an UnmarkTaskCommand for the specified task index.
+     *
+     * @param currentTask The index of the task to unmark
+     */
     public UnmarkTaskCommand(int currentTask) {
         this.currentTaskIndex = currentTask;
     }
 
+    /**
+     * Executes the unmark command, updating the task status and storage, and displaying a message.
+     *
+     * @param tasks   The list of tasks
+     * @param ui      The user interface for messages
+     * @param storage The storage handler
+     */
     @Override
     public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
         Task currentTask = tasks.get(currentTaskIndex);
-        currentTask.markAsUndone(); //mark as done
-        storage.writeToPosition( currentTaskIndex, "0", "1");
+        currentTask.markAsUndone(); // mark as not done
+        storage.writeToPosition(currentTaskIndex, "0", "1");
         ui.unmarkTaskMessage();
         System.out.println(currentTask);
-
     }
 }

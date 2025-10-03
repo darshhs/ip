@@ -6,16 +6,30 @@ import michael.Ui.UserMessages;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a command to find tasks containing a specific query string.
+ * Displays matching tasks to the user.
+ */
 public class FindCommand extends Command {
     private final String query;
 
+    /**
+     * Constructs a FindCommand with the specified query.
+     * @param query The string to search for in task descriptions
+     */
     public FindCommand(String query) {
         this.query = query;
     }
 
+    /**
+     * Executes the find command, displaying tasks that match the query.
+     * @param tasks The list of tasks
+     * @param ui The user interface for messages
+     * @param storage The storage handler
+     */
     @Override
     public void execute(ArrayList<Task> tasks, UserMessages ui, Storage storage) {
-        System.out.println("Here are the matching tasks in your list:");
+        ui.findTasksMessage();
         int index = 1;
         for (Task task : tasks) {
             if (task.getDescription().contains(query)) {
